@@ -12,6 +12,10 @@ migrate_up:
 
 .PHONY: run
 run: migrate_up build
-	./auto
+	./bx
 
 .DEFAULT_GOAL := build
+
+# migrate create -ext sql -dir migrations -seq create_customers_table
+# migrate -database "postgres://postgres:pass@db/data?sslmode=disable" -path migrations up
+# migrate -database "postgres://postgres:pass@db/data?sslmode=disable" -path migrations down

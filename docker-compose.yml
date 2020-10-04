@@ -22,8 +22,7 @@ services:
     container_name: bx_adminer
   app:
     build:
-      context: ./cmd/auto
-    command: make run
+      context: ./cmd/bx
     volumes:
       - "./:/go/src/github.com/demsasha4yt/bx-backend-trainee-assignment"
     container_name: bx_app
