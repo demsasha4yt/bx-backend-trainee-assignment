@@ -1,5 +1,12 @@
 {
 	"bind_addr": ":3000",
 	"log_level": "debug",
-	"database_url": "host=db dbname=data user=postgres password=pass sslmode=disable"
-  }
+	"database_url": "host=db dbname=data user=postgres password=pass sslmode=disable",
+	"email_sender": {
+		"server_host": "smtp.gmail.com",
+		"server_port": "465",
+		"sender_addr": "test@gmail.com",
+		"username": "test@gmail.com",
+		"password": ""
+	}
+}
