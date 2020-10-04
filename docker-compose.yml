@@ -1,0 +1,34 @@
+version: '3'
+services:
+  db:
+    image: postgres
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=pass
+      - POSTGRES_DB=data
+    tty: true
+    container_name: bx_db
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+    links:
+      - db
+    tty: true
+    container_name: bx_adminer
+  app:
+    build:
+      context: ./cmd/auto
+    command: make run
+    volumes:
+      - "./:/go/src/github.com/demsasha4yt/bx-backend-trainee-assignment"
+    container_name: bx_app
+    ports:
+      - "3000:3000"
+    tty: true
+    links:
+      - db
