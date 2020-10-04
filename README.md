@@ -7,7 +7,7 @@
 Если несколько пользователей подписались на одно и тоже объявление, сервис не должен лишний раз проверять цену объявления.
 
 ### ERD database
-![ERDdatabase](https://github.com/demsasha4yt/bx-backend-trainee-assignment/raw/assets/erd_db.png)
+![ERDdatabase](https://github.com/demsasha4yt/bx-backend-trainee-assignment/blob/master/assets/erd_db.png)
 
 ### References
 
