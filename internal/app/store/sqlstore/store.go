@@ -18,3 +18,25 @@ func New(db *pgxpool.Pool) store.Store {
 		db: db,
 	}
 }
+
+// Ads returns AdsRepository
+func (s *Store) Ads() store.AdsRepository {
+	if s.adsRepository != nil {
+		return s.adsRepository
+	}
+	s.adsRepository = &AdsRepository{
+		store: s,
+	}
+	return s.adsRepository
+}
+
+// Emails returns EmailsRepository
+func (s *Store) Emails() store.EmailsRepository {
+	if s.emailsRepository != nil {
+		return s.emailsRepository
+	}
+	s.emailsRepository = &EmailsRepository{
+		store: s,
+	}
+	return s.emailsRepository
+}

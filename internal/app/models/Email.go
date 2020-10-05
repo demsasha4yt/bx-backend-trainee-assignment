@@ -7,3 +7,8 @@ type Email struct {
 	Confirmed bool   `json:"confirmed,omitempty"`
 	CreatedAt string `json:"created_at,omitempty"`
 }
+
+// Validate validates struct
+func (m *Email) Validate() error {
+	return nil
+}

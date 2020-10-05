@@ -2,6 +2,10 @@ package service
 
 // Interface ...
 type Interface interface {
+	Subscription() SubscriptionServiceInterface
 }
 
-// Service ...
+// SubscriptionServiceInterface ...
+type SubscriptionServiceInterface interface {
+	Subscribe(string, string) (string, error)
+}

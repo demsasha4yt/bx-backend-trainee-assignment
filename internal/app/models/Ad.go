@@ -11,3 +11,13 @@ type Ad struct {
 	CurrentPrice int      `json:"cur_price,omitempty"`
 	PriceHistory []int    `json:"price_history,omitepty"`
 }
+
+// Validate validates struct
+func (m *Ad) Validate() error {
+	return nil
+}
+
+// SetAvitoIDFromLink parses link and put it to AvitoID field
+func (m *Ad) SetAvitoIDFromLink(link string) error {
+	return nil
+}
