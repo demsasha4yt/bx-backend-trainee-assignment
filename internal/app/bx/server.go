@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/demsasha4yt/bx-backend-trainee-assignment/internal/app/crontab"
+	"github.com/demsasha4yt/bx-backend-trainee-assignment/internal/app/emailsender"
 	"github.com/demsasha4yt/bx-backend-trainee-assignment/internal/app/service"
 	"github.com/demsasha4yt/bx-backend-trainee-assignment/internal/app/store"
 
@@ -21,18 +22,19 @@ const (
 
 // Server structure
 type server struct {
-	logger  *logrus.Logger
-	router  *mux.Router
-	cron    crontab.Cron
-	store   store.Store
-	service service.Interface
+	logger      *logrus.Logger
+	router      *mux.Router
+	cron        crontab.Cron
+	store       store.Store
+	service     service.Service
+	emailSender emailsender.EmailSender
 }
 
 func (s *server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	s.router.ServeHTTP(w, r)
 }
 
-func newServer(store store.Store, service service.Interface) *server {
+func newServer(store store.Store, service service.Service) *server {
 	s := &server{
 		logger:  logrus.New(),
 		router:  mux.NewRouter(),

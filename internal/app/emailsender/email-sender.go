@@ -8,12 +8,12 @@ type EmailSender interface {
 }
 
 type emailSender struct {
-	conf EmailConfig
+	conf Config
 	send func(string, smtp.Auth, string, []string, []byte) error
 }
 
 // NewEmailSender ...
-func NewEmailSender(conf EmailConfig) EmailSender {
+func NewEmailSender(conf Config) EmailSender {
 	return &emailSender{conf, smtp.SendMail}
 }
 

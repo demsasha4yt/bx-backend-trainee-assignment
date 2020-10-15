@@ -3,6 +3,7 @@ package models
 import (
 	"encoding/base64"
 	"encoding/json"
+	"strconv"
 
 	"golang.org/x/crypto/bcrypt"
 )
@@ -23,7 +24,7 @@ func (m *Email) Validate() error {
 }
 
 // GenerateTokens genererates unsubsribe and confirmation tokens
-func (m *Email) GenerateTokens(adID int) error {
+func (m *Email) GenerateTokens(adID int64) error {
 	if err := m.generateConfirmToken(adID); err != nil {
 		return err
 	}
@@ -58,9 +59,9 @@ func NewEmailSliceFromByte(b []byte) ([]*Email, error) {
 }
 
 // generateConfirmToken generates confirm token
-func (m *Email) generateConfirmToken(adID int) error {
+func (m *Email) generateConfirmToken(adID int64) error {
 	hash, err := bcrypt.GenerateFromPassword(
-		[]byte(string(adID)+m.Email+"_confirm"),
+		[]byte(strconv.FormatInt(adID, 10)+m.Email+"_confirm"),
 		bcrypt.DefaultCost,
 	)
 	if err != nil {
@@ -71,9 +72,9 @@ func (m *Email) generateConfirmToken(adID int) error {
 }
 
 // generateUnsubscribeToken generates unsubcribe token
-func (m *Email) generateUnsubscribeToken(adID int) error {
+func (m *Email) generateUnsubscribeToken(adID int64) error {
 	hash, err := bcrypt.GenerateFromPassword(
-		[]byte(string(adID)+m.Email+"_unsibscribe"),
+		[]byte(strconv.FormatInt(adID, 10)+m.Email+"_unsibscribe"),
 		bcrypt.DefaultCost,
 	)
 	if err != nil {

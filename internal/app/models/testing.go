@@ -9,7 +9,7 @@ func TestEmail(t *testing.T) *Email {
 	u := &Email{
 		Email: "test@yandex.ru",
 	}
-	u.GenerateTokens(0)
+	u.GenerateTokens(int64(0))
 	return u
 }
 

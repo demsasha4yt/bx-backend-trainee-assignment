@@ -16,7 +16,7 @@ func (s *subscriptionService) Subscribe(ctx context.Context, email string, link 
 	if err != nil {
 		return "", err
 	}
-	e.GenerateTokens(10)
+	e.GenerateTokens(int64(10))
 	return e, nil
 }
 

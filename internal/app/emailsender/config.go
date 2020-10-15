@@ -1,7 +1,7 @@
 package emailsender
 
-// EmailConfig ...
-type EmailConfig struct {
+// Config smtp config
+type Config struct {
 	Username   string `json:"username"`
 	Password   string `json:"password"`
 	ServerHost string `json:"server_host"`

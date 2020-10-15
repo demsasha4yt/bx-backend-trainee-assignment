@@ -2,6 +2,7 @@ package bx
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"time"
 
@@ -26,6 +27,7 @@ func Start(config *Config) error {
 	store := sqlstore.New(db)
 	service := service.New(store)
 	srv := newServer(store, service)
+	fmt.Printf("%+v\n", config.SMTPConfig)
 
 	return http.ListenAndServe(config.BindAddr, srv)
 }
