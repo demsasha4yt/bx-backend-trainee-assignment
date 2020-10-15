@@ -3,9 +3,9 @@ package bx
 import (
 	"net/http"
 
+	"github.com/demsasha4yt/bx-backend-trainee-assignment/internal/app/crontab"
 	"github.com/demsasha4yt/bx-backend-trainee-assignment/internal/app/service"
 	"github.com/demsasha4yt/bx-backend-trainee-assignment/internal/app/store"
-	"gopkg.in/robfig/cron.v2"
 
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
@@ -23,7 +23,7 @@ const (
 type server struct {
 	logger  *logrus.Logger
 	router  *mux.Router
-	cron    *cron.Cron
+	cron    crontab.Cron
 	store   store.Store
 	service service.Interface
 }
@@ -36,11 +36,12 @@ func newServer(store store.Store, service service.Interface) *server {
 	s := &server{
 		logger:  logrus.New(),
 		router:  mux.NewRouter(),
-		cron:    cron.New(),
+		cron:    crontab.New(),
 		store:   store,
 		service: service,
 	}
 	s.configureCron()
+	s.configureRouter()
 	return s
 }
 
@@ -52,11 +53,12 @@ func (s *server) configureRouter() {
 	s.router.HandleFunc("/api/health", func(w http.ResponseWriter, r *http.Request) {
 		s.respond(w, r, http.StatusOK, map[string]bool{"ok": true})
 	})
+	s.router.HandleFunc("/api/subscribe", s.handleSubscription())
 }
 
 func (s *server) configureCron() {
-	s.cron.AddFunc("@every 30s", func() {
-		s.logger.Info("CRONTAB every 30s")
+	s.cron.AddFunc("@every 10s", func() {
+		s.logger.Info("CRONTAB every 1s")
 	})
 	s.logger.Info("Cron configured")
 	s.cron.Start()

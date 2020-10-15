@@ -10,6 +10,8 @@ require (
 	github.com/gorilla/mux v1.8.0
 	github.com/jackc/pgx v3.6.2+incompatible
 	github.com/jackc/pgx/v4 v4.9.0
+	github.com/lib/pq v1.3.0
 	github.com/sirupsen/logrus v1.7.0
+	github.com/stretchr/testify v1.6.1
 	gopkg.in/robfig/cron.v2 v2.0.0-20150107220207-be2e0b0deed5
 )

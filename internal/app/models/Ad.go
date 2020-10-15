@@ -9,7 +9,7 @@ type Ad struct {
 	Actual       bool     `json:"actual,omitempty"`
 	Emails       []*Email `json:"emails,omitempty"`
 	CurrentPrice int      `json:"cur_price,omitempty"`
-	PriceHistory []int    `json:"price_history,omitepty"`
+	PriceHistory []int    `json:"price_history,omitempty"`
 }
 
 // Validate validates struct

@@ -1,5 +1,7 @@
 package service
 
+import "context"
+
 // Interface ...
 type Interface interface {
 	Subscription() SubscriptionServiceInterface
@@ -7,5 +9,5 @@ type Interface interface {
 
 // SubscriptionServiceInterface ...
 type SubscriptionServiceInterface interface {
-	Subscribe(string, string) (string, error)
+	Subscribe(context.Context, string, string) (interface{}, error)
 }
