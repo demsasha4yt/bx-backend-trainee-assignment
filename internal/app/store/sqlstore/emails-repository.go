@@ -4,6 +4,8 @@ import (
 	"context"
 
 	"github.com/demsasha4yt/bx-backend-trainee-assignment/internal/app/models"
+	"github.com/demsasha4yt/bx-backend-trainee-assignment/internal/app/store"
+	"github.com/jackc/pgx"
 )
 
 // EmailsRepository repository
@@ -27,13 +29,15 @@ func (r *EmailsRepository) FindByEmail(ctx context.Context, email string) (*mode
 	u := &models.Email{}
 	if err := r.store.db.QueryRow(
 		ctx,
-		"SELECT id, email, confirmed FROM emails WHERE email=$1",
+		"SELECT id, email FROM emails WHERE email=$1",
 		email,
 	).Scan(
 		&u.ID,
 		&u.Email,
-		&u.Confirmed,
 	); err != nil {
+		if err == pgx.ErrNoRows {
+			return nil, store.ErrRecordNotFound
+		}
 		return nil, err
 	}
 	return u, nil

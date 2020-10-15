@@ -6,9 +6,13 @@ build:
 test:
 	go test -v -race ./...
 
-.PHONY: migrate_up
-migrate_up:
+.PHONY: migrate
+migrate:
 	migrate -database "postgres://postgres:pass@db/data?sslmode=disable" -path migrations up
+
+.PHONY: migrate_down
+migrate_down:
+	migrate -database "postgres://postgres:pass@db/data?sslmode=disable" -path migrations down
 
 .PHONY: run
 run: migrate_up build

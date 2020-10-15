@@ -6,9 +6,11 @@ import "testing"
 func TestEmail(t *testing.T) *Email {
 	t.Helper()
 
-	return &Email{
+	u := &Email{
 		Email: "test@yandex.ru",
 	}
+	u.GenerateTokens(0)
+	return u
 }
 
 // TestAd returns testing Ad model

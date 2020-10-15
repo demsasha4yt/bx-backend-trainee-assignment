@@ -26,7 +26,7 @@ func TestEmailsRepository_Create(t *testing.T) {
 
 func TestEmailsRepository_FindByEmail(t *testing.T) {
 	db, teardown := sqlstore.TestDB(t, databaseURL)
-	defer teardown("emails", "ads")
+	defer teardown("emails")
 
 	s := sqlstore.New(db)
 	m := models.TestEmail(t)

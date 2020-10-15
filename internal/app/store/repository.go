@@ -9,7 +9,7 @@ import (
 // AdsRepository interface
 type AdsRepository interface {
 	Create(context.Context, *models.Ad) error
-	FindAll(context.Context, int, int)
+	FindAll(context.Context, int, int) ([]*models.Ad, error)
 }
 
 // EmailsRepository interface

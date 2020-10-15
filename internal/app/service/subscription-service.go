@@ -2,25 +2,30 @@ package service
 
 import (
 	"context"
-
-	"github.com/demsasha4yt/bx-backend-trainee-assignment/internal/app/models"
 )
 
 // SubscriptionService service
-type SubscriptionService struct {
-	service *Service
+type subscriptionService struct {
+	service *service
 }
 
 // Subscribe to ad
 // Returns message and error
-func (s *SubscriptionService) Subscribe(ctx context.Context, email string, link string) (interface{}, error) {
-	ad := &models.Ad{
-		Emails: []*models.Email{
-			&models.Email{
-				Email:     email,
-				Confirmed: false,
-			},
-		},
+func (s *subscriptionService) Subscribe(ctx context.Context, email string, link string) (interface{}, error) {
+	e, err := s.service.Emails().FindByEmailOrCreate(ctx, email)
+	if err != nil {
+		return "", err
 	}
-	return ad, nil
+	e.GenerateTokens(10)
+	return e, nil
+}
+
+func (s *subscriptionService) ConfirmSubscribe(ctx context.Context,
+	emailID, adID int, token string) (interface{}, error) {
+	return "ConfirmSubscribe", nil
+}
+
+func (s *subscriptionService) Unsubscribe(ctx context.Context,
+	emailID, adID int, token string) (interface{}, error) {
+	return "Unsubscribe", nil
 }
