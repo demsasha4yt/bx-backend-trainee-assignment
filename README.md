@@ -14,7 +14,8 @@
 ### Работа с БД
 
 Создание объявления и/или подписка на существующее объявление
-```
+
+```golang
   // AdsRepository repository
   type AdsRepository struct {
     store *Store
@@ -88,7 +89,7 @@
 
 ### Отправка уведомления на почту
 
-```
+```golang
   // EmailSender ...
   type EmailSender interface {
     Send(to string, subject string, body string) error
