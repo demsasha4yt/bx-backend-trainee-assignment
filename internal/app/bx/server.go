@@ -2,7 +2,9 @@ package bx
 
 import (
 	"net/http"
+	"time"
 
+	"github.com/demsasha4yt/bx-backend-trainee-assignment/internal/app/avitoapi"
 	"github.com/demsasha4yt/bx-backend-trainee-assignment/internal/app/crontab"
 	"github.com/demsasha4yt/bx-backend-trainee-assignment/internal/app/emailsender"
 	"github.com/demsasha4yt/bx-backend-trainee-assignment/internal/app/service"
@@ -28,6 +30,7 @@ type server struct {
 	store       store.Store
 	service     service.Service
 	emailSender emailsender.EmailSender
+	avitoAPI    avitoapi.AvitoAPI
 }
 
 func (s *server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -35,7 +38,7 @@ func (s *server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func newServer(store store.Store, service service.Service,
-	emailsender emailsender.EmailSender) *server {
+	emailsender emailsender.EmailSender, avitoAPI avitoapi.AvitoAPI) *server {
 	s := &server{
 		logger:      logrus.New(),
 		router:      mux.NewRouter(),
@@ -43,6 +46,7 @@ func newServer(store store.Store, service service.Service,
 		store:       store,
 		service:     service,
 		emailSender: emailsender,
+		avitoAPI:    avitoAPI,
 	}
 	s.configureCron()
 	s.configureRouter()
@@ -58,11 +62,23 @@ func (s *server) configureRouter() {
 		s.respond(w, r, http.StatusOK, map[string]bool{"ok": true})
 	})
 	s.router.HandleFunc("/api/subscribe", s.handleSubscription())
+	s.router.HandleFunc("/confirm", s.handleConfirmSubscribe())
+	s.router.HandleFunc("/unsubscribe", s.handleUnubscribe())
 }
 
 func (s *server) configureCron() {
+	var TaskID int = 1
 	s.cron.AddFunc("@every 10s", func() {
-		s.logger.Info("CRONTAB every 1s")
+		start := time.Now()
+		curID := TaskID
+		TaskID++
+		s.logger.Infof("PriceTracking start [ID:%d]", curID)
+		if err := s.service.PriceTracker().CheckAdsTask(); err != nil {
+			s.logger.Error(err)
+			s.logger.Errorf("PriceTracking failed (in %s) [ID:%d]", time.Since(start), curID)
+			return
+		}
+		s.logger.Infof("PriceTracking end (Completed in %s) [ID:%d]", time.Since(start), curID)
 	})
 	s.logger.Info("Cron configured")
 	s.cron.Start()

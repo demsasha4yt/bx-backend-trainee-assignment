@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/demsasha4yt/bx-backend-trainee-assignment/internal/app/avitoapi"
 	"github.com/demsasha4yt/bx-backend-trainee-assignment/internal/app/emailsender"
 
 	"github.com/demsasha4yt/bx-backend-trainee-assignment/internal/app/service"
@@ -26,9 +27,10 @@ func Start(config *Config) error {
 	defer db.Close()
 
 	store := sqlstore.New(db)
-	service := service.New(store)
 	emailsender := emailsender.NewEmailSender(config.SMTPConfig)
-	srv := newServer(store, service, emailsender)
+	avitoAPI := avitoapi.New(config.AvitoAPIConfig)
+	service := service.New(store, emailsender, avitoAPI)
+	srv := newServer(store, service, emailsender, avitoAPI)
 
 	return http.ListenAndServe(config.BindAddr, srv)
 }

@@ -39,12 +39,12 @@ func NewAdFromLink(link string) (*Ad, error) {
 }
 
 // GetInfo gets info about ad from avitoAPI
-func (m *Ad) GetInfo() error {
-	r, err := avitoapi.GetInfo(m.AvitoID)
+func (m *Ad) GetInfo(api avitoapi.AvitoAPI) error {
+	resp, err := api.GetInfo(m.AvitoID)
 	if err != nil {
 		return err
 	}
-	fmt.Printf("%+v\n", r)
+	m.CurrentPrice = resp.Price
 	return nil
 }
 

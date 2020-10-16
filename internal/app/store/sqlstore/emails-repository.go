@@ -5,7 +5,7 @@ import (
 
 	"github.com/demsasha4yt/bx-backend-trainee-assignment/internal/app/models"
 	"github.com/demsasha4yt/bx-backend-trainee-assignment/internal/app/store"
-	"github.com/jackc/pgx"
+	"github.com/jackc/pgx/v4"
 )
 
 // EmailsRepository repository

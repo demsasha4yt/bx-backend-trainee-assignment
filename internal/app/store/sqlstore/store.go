@@ -7,9 +7,10 @@ import (
 
 // Store ...
 type Store struct {
-	db               *pgxpool.Pool
-	adsRepository    *AdsRepository
-	emailsRepository *EmailsRepository
+	db                  *pgxpool.Pool
+	adsRepository       *AdsRepository
+	emailsRepository    *EmailsRepository
+	adsEmailsRepository *AdsEmailsRepository
 }
 
 // New creates new Store
@@ -39,4 +40,15 @@ func (s *Store) Emails() store.EmailsRepository {
 		store: s,
 	}
 	return s.emailsRepository
+}
+
+// AdsEmails returns AdsEmailsRepository
+func (s *Store) AdsEmails() store.AdsEmailsRepository {
+	if s.adsEmailsRepository != nil {
+		return s.adsEmailsRepository
+	}
+	s.adsEmailsRepository = &AdsEmailsRepository{
+		store: s,
+	}
+	return s.adsEmailsRepository
 }

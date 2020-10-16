@@ -4,7 +4,6 @@ import (
 	"context"
 
 	"github.com/demsasha4yt/bx-backend-trainee-assignment/internal/app/models"
-	"github.com/demsasha4yt/bx-backend-trainee-assignment/internal/app/store"
 )
 
 type emailsService struct {
@@ -36,16 +35,13 @@ func (s *emailsService) FindByEmailOrCreate(ctx context.Context, email string) (
 	e, err := s.FindByEmail(ctx, email)
 
 	if err != nil {
-		if err == store.ErrRecordNotFound {
-			e = &models.Email{
-				Email: email,
-			}
-			if err := s.Create(ctx, e); err != nil {
-				return nil, err
-			}
-			return e, nil
+		e = &models.Email{
+			Email: email,
 		}
-		return nil, err
+		if err := s.Create(ctx, e); err != nil {
+			return nil, err
+		}
+		return e, nil
 	}
 	return e, nil
 }
