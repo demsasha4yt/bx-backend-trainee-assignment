@@ -101,12 +101,6 @@
 
   // NewEmailSender ...
   func NewEmailSender(conf Config) EmailSender {
-    fmt.Println("CONFIGURE SMTP SERVER:")
-    fmt.Println("\tSMTP_HOST:", conf.ServerHost)
-    fmt.Println("\tSMTP_PORT:", conf.ServerPort)
-    fmt.Println("\tSMTP_USER:", conf.Username)
-    fmt.Println("\tSMTP_PASSWORD:", conf.Password)
-    fmt.Println("\tSMTP_SENDER_ADDR:", conf.SenderAddr)
     return &emailSender{conf}
   }
 
