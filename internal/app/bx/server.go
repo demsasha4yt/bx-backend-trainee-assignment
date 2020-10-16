@@ -34,13 +34,15 @@ func (s *server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	s.router.ServeHTTP(w, r)
 }
 
-func newServer(store store.Store, service service.Service) *server {
+func newServer(store store.Store, service service.Service,
+	emailsender emailsender.EmailSender) *server {
 	s := &server{
-		logger:  logrus.New(),
-		router:  mux.NewRouter(),
-		cron:    crontab.New(),
-		store:   store,
-		service: service,
+		logger:      logrus.New(),
+		router:      mux.NewRouter(),
+		cron:        crontab.New(),
+		store:       store,
+		service:     service,
+		emailSender: emailsender,
 	}
 	s.configureCron()
 	s.configureRouter()

@@ -2,9 +2,10 @@ package bx
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 	"time"
+
+	"github.com/demsasha4yt/bx-backend-trainee-assignment/internal/app/emailsender"
 
 	"github.com/demsasha4yt/bx-backend-trainee-assignment/internal/app/service"
 	"github.com/demsasha4yt/bx-backend-trainee-assignment/internal/app/store/sqlstore"
@@ -26,8 +27,8 @@ func Start(config *Config) error {
 
 	store := sqlstore.New(db)
 	service := service.New(store)
-	srv := newServer(store, service)
-	fmt.Printf("%+v\n", config.SMTPConfig)
+	emailsender := emailsender.NewEmailSender(config.SMTPConfig)
+	srv := newServer(store, service, emailsender)
 
 	return http.ListenAndServe(config.BindAddr, srv)
 }

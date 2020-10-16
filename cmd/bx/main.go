@@ -5,8 +5,10 @@ import (
 	"flag"
 	"io/ioutil"
 	"log"
+	"os"
 
 	"github.com/demsasha4yt/bx-backend-trainee-assignment/internal/app/bx"
+	"github.com/demsasha4yt/bx-backend-trainee-assignment/internal/app/emailsender"
 )
 
 var (
@@ -25,6 +27,29 @@ func getConfigData(path string) ([]byte, error) {
 	return data, err
 }
 
+func parseSMTPEnvironment(config *emailsender.Config) {
+	smtpHost := os.Getenv("SMTP_HOST")
+	if smtpHost != "" {
+		config.ServerHost = smtpHost
+	}
+	smtpPort := os.Getenv("SMTP_PORT")
+	if smtpPort != "" {
+		config.ServerPort = smtpPort
+	}
+	smtpUser := os.Getenv("SMTP_USER")
+	if smtpUser != "" {
+		config.Username = smtpUser
+	}
+	smtpPassword := os.Getenv("SMTP_PASSWORD")
+	if smtpPassword != "" {
+		config.Password = smtpPassword
+	}
+	smtpSender := os.Getenv("SMTP_SENDER_ADDR")
+	if smtpSender != "" {
+		config.SenderAddr = smtpSender
+	}
+}
+
 func main() {
 	flag.Parse()
 
@@ -39,6 +64,8 @@ func main() {
 		log.Fatal(err)
 		return
 	}
+
+	parseSMTPEnvironment(&config.SMTPConfig)
 
 	if err := bx.Start(config); err != nil {
 		log.Fatal(err)

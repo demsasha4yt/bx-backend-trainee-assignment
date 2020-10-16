@@ -1,6 +1,15 @@
+SHELL := /bin/bash
+
+.PHONY: setup
+setup: migrate
+
 .PHONY: build
 build:
 	go build -v ./cmd/bx
+
+.PHONY: setup run
+run: build
+	source .env && ./bx
 
 .PHONY: test
 test:
@@ -14,9 +23,6 @@ migrate:
 migrate_down:
 	migrate -database "postgres://postgres:pass@db/data?sslmode=disable" -path migrations down
 
-.PHONY: run
-run: migrate_up build
-	./bx
 
 .DEFAULT_GOAL := build
 

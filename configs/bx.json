@@ -8,5 +8,9 @@
 		"sender_addr": "test@gmail.com",
 		"username": "test@gmail.com",
 		"password": ""
+	},
+	"avito_api": {
+		"url": "https://avito.bharrold.ru",
+		"key": "rijfgjgfnidhjiuddcctntijlvngjdddigcgbcced0fa"
 	}
 }

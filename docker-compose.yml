@@ -31,9 +31,3 @@ services:
     tty: true
     links:
       - db
-    environment:
-      - SMTP_HOST=smtp.gmail.com
-      - SMTP_PORT=465
-      - SMTP_USER=test@gmail.com
-      - SMTP_PASSWORD=passwords
-      - SMTP_SENDER_ADD=test@gmail.com
