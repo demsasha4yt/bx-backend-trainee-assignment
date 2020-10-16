@@ -11,6 +11,40 @@
 
 ## Фрагменты кода, решающие некоторые задачи
 
+### Подписка на изменение цены
+```golang
+  // Subscribe to ad
+  // Returns result interface{} or error
+  func (s *subscriptionService) Subscribe(ctx context.Context, email string, link string) (interface{}, error) {
+    e, err := s.service.Emails().FindByEmailOrCreate(ctx, email)
+    if err != nil {
+      return "", err
+    }
+
+    ad, err := models.NewAdFromLink(link)
+    if err != nil {
+      return "", err
+    }
+
+    e.GenerateTokens(ad.AvitoID) // Generate tokens for confirm email or unsubscribe
+    ad.Emails = append(ad.Emails, e)
+
+    if err := ad.GetInfo(s.avitoAPI); err != nil {
+      return "", err
+    }
+
+    if err := s.service.Ads().SubscribeOrCreate(ctx, ad); err != nil {
+      return "", err
+    }
+
+    if !e.Confirmed {
+      return "Подтвердите Email", nil
+    }
+
+    return fmt.Sprintf("Подписка на объявление №%d успешно активирована", ad.AvitoID), nil
+  }
+```
+
 ### Работа с БД
 
 Создание объявления и/или подписка на существующее объявление
