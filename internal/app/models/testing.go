@@ -23,3 +23,13 @@ func TestAd(t *testing.T) *Ad {
 		Emails:       make([]*Email, 0),
 	}
 }
+
+// TestAvitoMock returns testing AvitoMock
+func TestAvitoMock(t *testing.T) *AvitoMock {
+	t.Helper()
+
+	return &AvitoMock{
+		AvitoID: 10000,
+		Price:   10000,
+	}
+}
