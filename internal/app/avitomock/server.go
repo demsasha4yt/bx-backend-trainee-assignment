@@ -1,8 +1,13 @@
 package avitomock
 
 import (
-	"fmt"
+	"context"
+	"encoding/json"
 	"net/http"
+	"strconv"
+	"time"
+
+	"github.com/demsasha4yt/bx-backend-trainee-assignment/internal/app/models"
 
 	"github.com/demsasha4yt/bx-backend-trainee-assignment/internal/app/crontab"
 	"github.com/demsasha4yt/bx-backend-trainee-assignment/internal/app/store"
@@ -44,6 +49,21 @@ func newServer(store store.Store, conf *Config) *server {
 	return s
 }
 
+func (s *server) configureCron() {
+	var TaskID int = 1
+	s.cron.AddFunc("@every 10m", func() {
+		start := time.Now()
+		curID := TaskID
+		TaskID++
+		s.logger.Infof("UpdateAds start [ID:%d]", curID)
+		s.store.AvitoMock().SetDeleted(context.Background())
+		s.store.AvitoMock().UpdatePrices(context.Background())
+		s.logger.Infof("UpdateAds end (Completed in %s) [ID:%d]", time.Since(start), curID)
+	})
+	s.logger.Info("Cron configured")
+	s.cron.Start()
+}
+
 func (s *server) configureRouter() {
 	s.router.Use(s.setRequestID)
 	s.router.Use(handlers.CORS(handlers.AllowedOrigins([]string{"*"})))
@@ -60,23 +80,103 @@ func (s *server) configureRouter() {
 func (s *server) handleAdInfo() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		vars := mux.Vars(r)
-		w.WriteHeader(http.StatusOK)
-		fmt.Fprintf(w, "SHOW: %v\n", vars["id"])
+		avitoID, err := strconv.ParseInt(vars["id"], 10, 64)
+		if err != nil {
+			s.error(w, r, http.StatusBadRequest, err)
+			return
+		}
+		ad, err := s.store.AvitoMock().FindByAvitoID(r.Context(), avitoID)
+		if err != nil {
+			ad = models.NewAvitoMockFromID(avitoID)
+			if err != store.ErrRecordNotFound {
+				s.error(w, r, http.StatusInternalServerError, err)
+				return
+			}
+			if err := s.store.AvitoMock().Create(r.Context(), ad); err != nil {
+				s.error(w, r, http.StatusBadRequest, err)
+				return
+			}
+		}
+		if ad.Deleted {
+			s.respond(w, r, http.StatusOK, map[string]string{"status": "not-found", "result": ""})
+			return
+		}
+		s.respond(w, r, http.StatusOK, map[string]interface{}{
+			"status": "ok",
+			"result": map[string]interface{}{
+				"banners": map[string]interface{}{
+					"somedata":  "somedata",
+					"somedata2": "somedata",
+					"somedata3": "somedata",
+					"somedata4": "somedata",
+					"somedata5": "somedata",
+				},
+				"dfpTargetings": map[string]interface{}{
+					"somedata":   "somedata",
+					"somedata2":  "somedata",
+					"somedata3":  "somedata",
+					"somedata4":  "somedata",
+					"somedata5":  "somedata",
+					"par_price":  ad.Price,
+					"somedata6":  "somedata",
+					"somedata7":  "somedata",
+					"somedata8":  "somedata",
+					"somedata9":  "somedata",
+					"somedata10": "somedata",
+				},
+				"enableEventSampling": false,
+				"wbPixelEnabled":      true,
+			},
+		})
 	}
 }
 
 func (s *server) handleUpdatePrice() http.HandlerFunc {
+	type request struct {
+		Price int `json:"price"`
+	}
 	return func(w http.ResponseWriter, r *http.Request) {
+		req := &request{}
 		vars := mux.Vars(r)
-		w.WriteHeader(http.StatusOK)
-		fmt.Fprintf(w, "UPPDATE ID: %v\n", vars["id"])
+
+		avitoID, err := strconv.ParseInt(vars["id"], 10, 64)
+		if err != nil {
+			s.error(w, r, http.StatusBadRequest, err)
+			return
+		}
+
+		if err := json.NewDecoder(r.Body).Decode(req); err != nil {
+			s.error(w, r, http.StatusBadRequest, err)
+			return
+		}
+
+		u := &models.AvitoMock{
+			AvitoID: avitoID,
+			Price:   req.Price,
+		}
+
+		if err := s.store.AvitoMock().UpdatePrice(r.Context(), avitoID, req.Price); err != nil {
+			s.error(w, r, http.StatusInternalServerError, err)
+			return
+		}
+
+		s.respond(w, r, http.StatusOK, u)
 	}
 }
 
 func (s *server) handleSetDeleted() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		vars := mux.Vars(r)
-		w.WriteHeader(http.StatusOK)
-		fmt.Fprintf(w, "DELETE ID: %v\n", vars["id"])
+
+		avitoID, err := strconv.ParseInt(vars["id"], 10, 64)
+		if err != nil {
+			s.error(w, r, http.StatusBadRequest, err)
+			return
+		}
+		if err := s.store.AvitoMock().SetDeletedOne(r.Context(), avitoID); err != nil {
+			s.error(w, r, http.StatusInternalServerError, err)
+			return
+		}
+		s.respond(w, r, http.StatusOK, "ok")
 	}
 }
