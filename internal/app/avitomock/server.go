@@ -1,6 +1,7 @@
 package avitomock
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/demsasha4yt/bx-backend-trainee-assignment/internal/app/crontab"
@@ -51,4 +52,31 @@ func (s *server) configureRouter() {
 	s.router.HandleFunc("/api/health", func(w http.ResponseWriter, r *http.Request) {
 		s.respond(w, r, http.StatusOK, map[string]bool{"ok": true})
 	})
+	s.router.HandleFunc("/api/1/rmp/show/{id:[0-9]+}", s.handleAdInfo())
+	s.router.HandleFunc("/api/1/rmp/update/{id:[0-9]+}", s.handleUpdatePrice())
+	s.router.HandleFunc("/api/1/rmp/delete/{id:[0-9]+}", s.handleSetDeleted())
+}
+
+func (s *server) handleAdInfo() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		vars := mux.Vars(r)
+		w.WriteHeader(http.StatusOK)
+		fmt.Fprintf(w, "SHOW: %v\n", vars["id"])
+	}
+}
+
+func (s *server) handleUpdatePrice() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		vars := mux.Vars(r)
+		w.WriteHeader(http.StatusOK)
+		fmt.Fprintf(w, "UPPDATE ID: %v\n", vars["id"])
+	}
+}
+
+func (s *server) handleSetDeleted() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		vars := mux.Vars(r)
+		w.WriteHeader(http.StatusOK)
+		fmt.Fprintf(w, "DELETE ID: %v\n", vars["id"])
+	}
 }

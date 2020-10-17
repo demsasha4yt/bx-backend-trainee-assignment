@@ -14,7 +14,7 @@ var (
 )
 
 func init() {
-	flag.StringVar(&configPath, "config-path", "configs/bx.json", "path to config file")
+	flag.StringVar(&configPath, "config-path", "configs/avitomock.json", "path to config file")
 }
 
 func getConfigData(path string) ([]byte, error) {

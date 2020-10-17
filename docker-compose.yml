@@ -3,8 +3,6 @@ services:
   db:
     image: postgres
     restart: always
-    ports:
-      - 5432:5432
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=pass
@@ -28,6 +26,7 @@ services:
     container_name: bx_app
     ports:
       - "3000:3000"
+      - "9000:9000"
     tty: true
     links:
       - db

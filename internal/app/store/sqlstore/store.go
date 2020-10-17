@@ -11,6 +11,7 @@ type Store struct {
 	adsRepository       *AdsRepository
 	emailsRepository    *EmailsRepository
 	adsEmailsRepository *AdsEmailsRepository
+	avitoMockRepository *AvitoMockRepository
 }
 
 // New creates new Store
@@ -51,4 +52,15 @@ func (s *Store) AdsEmails() store.AdsEmailsRepository {
 		store: s,
 	}
 	return s.adsEmailsRepository
+}
+
+//AvitoMock return AvitoMockRepository
+func (s *Store) AvitoMock() store.AvitoMockRepository {
+	if s.avitoMockRepository != nil {
+		return s.avitoMockRepository
+	}
+	s.avitoMockRepository = &AvitoMockRepository{
+		store: s,
+	}
+	return s.avitoMockRepository
 }

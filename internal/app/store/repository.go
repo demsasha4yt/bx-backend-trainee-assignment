@@ -26,3 +26,13 @@ type AdsEmailsRepository interface {
 	UpdateConfirmed(context.Context, *models.AdsEmails, bool) error
 	Delete(context.Context, *models.AdsEmails) error
 }
+
+// AvitoMockRepository interface
+type AvitoMockRepository interface {
+	Create(context.Context, *models.AvitoMock) error
+	FindByAvitoID(context.Context, int64) (*models.AvitoMock, error)
+	UpdatePrices(context.Context) error
+	UpdatePrice(context.Context, int64, int) error
+	SetDeletedOne(context.Context, int64) error
+	SetDeleted(context.Context) error
+}
