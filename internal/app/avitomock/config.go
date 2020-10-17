@@ -6,7 +6,7 @@ type Config struct {
 	LogLevel    string `json:"log_level"`
 	DatabaseURL string `json:"database_url"`
 	Delay       int    `json:"delay"`
-	AvitoKey    string `json:"avito_key"`
+	AvitoKey    string `json:"key"`
 }
 
 // NewConfig ..

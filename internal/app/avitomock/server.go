@@ -3,6 +3,7 @@ package avitomock
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"net/http"
 	"strconv"
 	"time"
@@ -79,12 +80,21 @@ func (s *server) configureRouter() {
 
 func (s *server) handleAdInfo() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+
+		key := r.URL.Query().Get("key")
+		if key != s.conf.AvitoKey {
+			s.error(w, r, http.StatusForbidden, errors.New("Незвестный ключ"))
+			return
+		}
+
 		vars := mux.Vars(r)
+
 		avitoID, err := strconv.ParseInt(vars["id"], 10, 64)
 		if err != nil {
 			s.error(w, r, http.StatusBadRequest, err)
 			return
 		}
+
 		ad, err := s.store.AvitoMock().FindByAvitoID(r.Context(), avitoID)
 		if err != nil {
 			ad = models.NewAvitoMockFromID(avitoID)
@@ -97,10 +107,14 @@ func (s *server) handleAdInfo() http.HandlerFunc {
 				return
 			}
 		}
+
 		if ad.Deleted {
 			s.respond(w, r, http.StatusOK, map[string]string{"status": "not-found", "result": ""})
 			return
 		}
+
+		w.Header().Set("Content-Type", "application/json")
+
 		s.respond(w, r, http.StatusOK, map[string]interface{}{
 			"status": "ok",
 			"result": map[string]interface{}{
