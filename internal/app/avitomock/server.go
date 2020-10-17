@@ -46,6 +46,7 @@ func newServer(store store.Store, conf *Config) *server {
 		store:  store,
 		conf:   conf,
 	}
+	s.configureCron()
 	s.configureRouter()
 	return s
 }
@@ -92,6 +93,11 @@ func (s *server) handleAdInfo() http.HandlerFunc {
 		avitoID, err := strconv.ParseInt(vars["id"], 10, 64)
 		if err != nil {
 			s.error(w, r, http.StatusBadRequest, err)
+			return
+		}
+
+		if avitoID < 10000 {
+			s.respond(w, r, http.StatusOK, map[string]string{"status": "not-found", "result": ""})
 			return
 		}
 

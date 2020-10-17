@@ -4,10 +4,13 @@ import (
 	"context"
 	"time"
 
+	"github.com/demsasha4yt/bx-backend-trainee-assignment/internal/app/store"
+	"github.com/jackc/pgx/v4"
+
 	"github.com/demsasha4yt/bx-backend-trainee-assignment/internal/app/models"
 )
 
-var timestampSub int = -10
+var timestampSub int = -9
 
 // AvitoMockRepository repository
 type AvitoMockRepository struct {
@@ -42,6 +45,9 @@ func (r *AvitoMockRepository) FindByAvitoID(ctx context.Context, avitoID int64) 
 		&u.Price,
 		&u.Deleted,
 	); err != nil {
+		if err == pgx.ErrNoRows {
+			return nil, store.ErrRecordNotFound
+		}
 		return nil, err
 	}
 
@@ -70,7 +76,7 @@ func (r *AvitoMockRepository) SetDeleted(ctx context.Context) error {
 	timestamp := time.Now().Add(time.Duration(timestampSub) * time.Minute)
 
 	_, err := r.store.db.Exec(ctx,
-		`UPDATE avito_mockapi SET (price, count_changes) = (floor(random() * 10000 + 1), count_changes + 1)
+		`UPDATE avito_mockapi SET (deleted, count_changes) = (TRUE, count_changes + 1)
 		WHERE deleted != TRUE AND count_changes = 2 AND changed_at <= $1`,
 		timestamp,
 	)

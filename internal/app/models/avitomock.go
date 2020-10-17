@@ -14,7 +14,10 @@ type AvitoMock struct {
 
 // NewAvitoMockFromID returns new AvitoMock model with random price
 func NewAvitoMockFromID(avitoID int64) *AvitoMock {
-	u := &AvitoMock{}
+	u := &AvitoMock{
+		AvitoID: avitoID,
+		Deleted: false,
+	}
 	u.GenerateRandomPrice()
 	return u
 }
