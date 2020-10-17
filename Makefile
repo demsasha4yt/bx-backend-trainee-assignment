@@ -6,7 +6,8 @@ setup: migrate
 .PHONY: build
 build:
 	go build -v ./cmd/bx
-
+	go build -v ./cmd/avitomock
+	
 .PHONY: setup run
 run: build
 	source .env && ./bx

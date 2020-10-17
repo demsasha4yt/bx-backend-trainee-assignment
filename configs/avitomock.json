@@ -1,0 +1,7 @@
+{
+	"bind_addr": ":9000",
+	"log_level": "debug",
+	"database_url": "host=db dbname=data user=postgres password=pass sslmode=disable",
+    "key": "rijfgjgfnidhjiuddcctntijlvngjdddigcgbcced0fa",
+    "delay": 0
+}
