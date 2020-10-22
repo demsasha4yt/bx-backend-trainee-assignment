@@ -10,7 +10,7 @@
 		"password": ""
 	},
 	"avito_api": {
-		"url": "https://avito.bharrold.ru",
+		"url": "avitomock:9000",
 		"key": "rijfgjgfnidhjiuddcctntijlvngjdddigcgbcced0fa"
 	}
 }

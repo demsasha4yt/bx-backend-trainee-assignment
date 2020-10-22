@@ -20,6 +20,19 @@ services:
       - db
     tty: true
     container_name: bx_adminer
+  avitomock:
+    build:
+      context: 
+        ./cmd/avitomock
+    command: make run_mock
+    volumes:
+      - "./:/go/src/github.com/demsasha4yt/bx-backend-trainee-assignment"
+    container_name: bx_avitomock
+    ports:
+      - 9000:9000
+    tty: true
+    links:
+      - db
   app:
     build:
       context: ./cmd/bx
@@ -28,7 +41,7 @@ services:
     container_name: bx_app
     ports:
       - "3000:3000"
-      - "9000:9000"
     tty: true
     links:
       - db
+      - avitomock
