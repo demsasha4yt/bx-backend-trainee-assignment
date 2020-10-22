@@ -5,6 +5,9 @@ import (
 	"encoding/json"
 	"strconv"
 
+	validation "github.com/go-ozzo/ozzo-validation"
+	"github.com/go-ozzo/ozzo-validation/is"
+
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -16,22 +19,6 @@ type Email struct {
 	ConfirmToken     string `json:"-"`
 	UnsubscribeToken string `json:"-"`
 	CreatedAt        string `json:"created_at,omitempty"`
-}
-
-// Validate validates struct
-func (m *Email) Validate() error {
-	return nil
-}
-
-// GenerateTokens genererates unsubsribe and confirmation tokens
-func (m *Email) GenerateTokens(adID int64) error {
-	if err := m.generateConfirmToken(adID); err != nil {
-		return err
-	}
-	if err := m.generateUnsubscribeToken(adID); err != nil {
-		return err
-	}
-	return nil
 }
 
 // NewEmailFromByte creates struct from byte slice
@@ -56,6 +43,25 @@ func NewEmailSliceFromByte(b []byte) ([]*Email, error) {
 		return nil, err
 	}
 	return u, nil
+}
+
+// Validate validates struct
+func (m *Email) Validate() error {
+	return validation.ValidateStruct(
+		m,
+		validation.Field(&m.Email, validation.Required, is.Email),
+	)
+}
+
+// GenerateTokens genererates unsubsribe and confirmation tokens
+func (m *Email) GenerateTokens(adID int64) error {
+	if err := m.generateConfirmToken(adID); err != nil {
+		return err
+	}
+	if err := m.generateUnsubscribeToken(adID); err != nil {
+		return err
+	}
+	return nil
 }
 
 // generateConfirmToken generates confirm token

@@ -1,6 +1,10 @@
 package models
 
-import "math/rand"
+import (
+	"math/rand"
+
+	validation "github.com/go-ozzo/ozzo-validation"
+)
 
 // AvitoMock model
 type AvitoMock struct {
@@ -24,7 +28,11 @@ func NewAvitoMockFromID(avitoID int64) *AvitoMock {
 
 // Validate validates AvitoMock Model
 func (m *AvitoMock) Validate() error {
-	return nil
+	return validation.ValidateStruct(
+		m,
+		validation.Field(&m.AvitoID, validation.Required, validation.Min(1)),
+		validation.Field(&m.Price, validation.Required, validation.Min(1)),
+	)
 }
 
 // GenerateRandomPrice generates random price for AvitoMock

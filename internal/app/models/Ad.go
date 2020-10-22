@@ -6,6 +6,7 @@ import (
 	"strconv"
 
 	"github.com/demsasha4yt/bx-backend-trainee-assignment/internal/app/avitoapi"
+	validation "github.com/go-ozzo/ozzo-validation"
 )
 
 // Ad model
@@ -50,10 +51,11 @@ func (m *Ad) GetInfo(api avitoapi.AvitoAPI) error {
 
 // Validate validates struct
 func (m *Ad) Validate() error {
-	return nil
-}
-
-// SetAvitoIDFromLink parses link and put it to AvitoID field
-func (m *Ad) SetAvitoIDFromLink(link string) error {
-	return nil
+	fmt.Printf("%d %d\n", m.AvitoID, m.CurrentPrice)
+	return validation.ValidateStruct(
+		m,
+		validation.Field(&m.AvitoID, validation.Required, validation.Min(1)),
+		validation.Field(&m.CurrentPrice, validation.Required, validation.Min(1)),
+		validation.Field(&m.Emails),
+	)
 }
