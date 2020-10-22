@@ -21,46 +21,79 @@ const (
 	priceChangedTemplateFile = "./templates/pricechanged.html"
 )
 
+type emailData struct {
+	AvitoID          int64
+	Link             string
+	CurrentPrice     int
+	PriceHistory     []int
+	ConfirmationLink string
+	UnsubscribeLink  string
+}
+
 // GetConfirmationTemplate ...
 func GetConfirmationTemplate(ad *models.Ad, email *models.Email) (*EmailTemplate, error) {
-	subject := fmt.Sprintf("Подтвердите электронную почту для объявления №%d", ad.AvitoID)
-
-	body, err := parseTemplate(confirmationTemplateFile, "")
+	d := &emailData{
+		AvitoID:          ad.AvitoID,
+		Link:             ad.Link,
+		ConfirmationLink: "",
+	}
+	body, err := parseTemplate(confirmationTemplateFile, d)
 	if err != nil {
 		return nil, err
 	}
+
+	subject := fmt.Sprintf("Подтвердите электронную почту для объявления №%d", ad.AvitoID)
+
 	return &EmailTemplate{subject, body}, nil
 }
 
 // GetConfirmedTemplate ...
 func GetConfirmedTemplate(ad *models.Ad, email *models.Email) (*EmailTemplate, error) {
-	subject := fmt.Sprintf("Подписка на объявление №%d активирована", ad.AvitoID)
-
-	body, err := parseTemplate(confirmedTemplateFile, "")
+	d := &emailData{
+		AvitoID:         ad.AvitoID,
+		Link:            ad.Link,
+		UnsubscribeLink: "",
+	}
+	body, err := parseTemplate(confirmedTemplateFile, d)
 	if err != nil {
 		return nil, err
 	}
+
+	subject := fmt.Sprintf("Подписка на объявление №%d активирована", ad.AvitoID)
+
 	return &EmailTemplate{subject, body}, nil
 }
 
 // GetPriceChangedTemplate ...
 func GetPriceChangedTemplate(ad *models.Ad, email *models.Email) (*EmailTemplate, error) {
-	subject := fmt.Sprintf("Стоимость объявления №%d изменилась.", ad.AvitoID)
-
-	body, err := parseTemplate(priceChangedTemplateFile, "")
+	d := &emailData{
+		AvitoID:         ad.AvitoID,
+		Link:            ad.Link,
+		UnsubscribeLink: "",
+	}
+	body, err := parseTemplate(priceChangedTemplateFile, d)
 	if err != nil {
 		return nil, err
 	}
+
+	subject := fmt.Sprintf("Стоимость объявления №%d изменилась.", ad.AvitoID)
+
 	return &EmailTemplate{subject, body}, nil
 }
 
 // GetAdNotActualTemplate ...
 func GetAdNotActualTemplate(ad *models.Ad, email *models.Email) (*EmailTemplate, error) {
-	subject := fmt.Sprintf("Объявление №%d удалено пользователем", ad.AvitoID)
-	body, err := parseTemplate(notActualTemplateFile, "")
+	d := &emailData{
+		AvitoID: ad.AvitoID,
+		Link:    ad.Link,
+	}
+	body, err := parseTemplate(notActualTemplateFile, d)
 	if err != nil {
 		return nil, err
 	}
+
+	subject := fmt.Sprintf("Объявление №%d удалено пользователем", ad.AvitoID)
+
 	return &EmailTemplate{subject, body}, nil
 }
 

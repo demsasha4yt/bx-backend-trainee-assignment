@@ -13,6 +13,7 @@ import (
 type Ad struct {
 	ID           int64    `json:"id"`
 	AvitoID      int64    `json:"avito_id,omitempty"`
+	Link         string   `json:"link,omitempty"`
 	CreatedAt    string   `json:"created_at,omitempty"`
 	CheckedAt    string   `json:"checked_at,omitempty"`
 	Actual       bool     `json:"actual,omitempty"`
