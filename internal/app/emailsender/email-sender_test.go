@@ -12,11 +12,11 @@ func TestEmailSender_Send(t *testing.T) {
 		ServerHost: "smtp.yandex.ru",
 		ServerPort: "465",
 		Username:   "info@bharrold.ru",
-		Password:   "contact me if u need password",
+		Password:   "sdfsadfsadf",
 		SenderAddr: "info@bharrold.ru",
 	}
 	es := emailsender.NewEmailSender(c)
 	assert.NoError(t, es.Send("demsasha4yt@yandex.ru",
-		"Тестовое сообщение",
-		"Привет2"))
+		"Для тестов GOLANG",
+		``))
 }

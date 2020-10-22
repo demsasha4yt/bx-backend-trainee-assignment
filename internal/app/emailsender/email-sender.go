@@ -33,6 +33,8 @@ func (e *emailSender) Send(to string, subject string, body string) error {
 	headers["From"] = e.conf.SenderAddr
 	headers["To"] = to
 	headers["Subject"] = subject
+	headers["MIME-version"] = "1.0"
+	headers["Content-Type"] = "text/html; charset=\"UTF-8\";"
 
 	// Setup message
 	message := ""

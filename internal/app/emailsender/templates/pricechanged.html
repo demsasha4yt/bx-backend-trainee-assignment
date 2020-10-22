@@ -1,0 +1,12 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+				"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head></head>
+<body>
+    <h1>Стоимость изменилась</h1>
+    <p>Внимание! Стоимость на товар в объявлении <a href="{{.Link}}">№{{.AvitoID}}</a> изменилась!</p>
+    <h2>Текущая стомость: {{.CurrentPrice}}</h2>
+    <p>Если вы получили это письмо по ошибке, отпишитесь от рассылки и просто удалите его. Мы не будем присылать вам письма, если вы щелкните по ссылке отписки ниже.</p>
+    <a href="{{.ConfirmationLink}}">Щелкните здесь, чтобы отписаться.</a>
+</body>
+</html>
